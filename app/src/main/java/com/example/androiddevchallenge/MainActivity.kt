@@ -22,15 +22,25 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.androiddevchallenge.ui.theme.MyTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.Navigation
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
+import com.example.androiddevchallenge.features.details.DetailsPage
+import com.example.androiddevchallenge.features.list.HomePage
+import com.example.androiddevchallenge.features.list.ListViewModel
+import com.example.androiddevchallenge.ui.theme.AdopyTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyTheme {
-                MyApp()
+            AdopyTheme {
+                AdopyApp()
             }
         }
     }
@@ -38,24 +48,36 @@ class MainActivity : AppCompatActivity() {
 
 // Start building your app here!
 @Composable
-fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+fun AdopyApp() {
+    val viewModel: ListViewModel = viewModel()
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = Router.HomePage.title) {
+        composable(Router.HomePage.title) {
+            HomePage(viewModel) {
+                navController.navigate(Router.DetailPage.title + "/${it.name}")
+            }
+        }
+
+        composable(Router.DetailPage.title + "/{name}") {
+            val name = it.arguments?.getString("name")
+            val dog = viewModel.find(name)
+            DetailsPage(dog = dog, navigateBack = { navController.popBackStack() })
+        }
     }
 }
 
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun LightPreview() {
-    MyTheme {
-        MyApp()
+    AdopyTheme {
+        AdopyApp()
     }
 }
 
 @Preview("Dark Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun DarkPreview() {
-    MyTheme(darkTheme = true) {
-        MyApp()
+    AdopyTheme(darkTheme = true) {
+        AdopyApp()
     }
 }
