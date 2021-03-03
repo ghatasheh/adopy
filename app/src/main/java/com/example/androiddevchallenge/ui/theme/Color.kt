@@ -15,9 +15,15 @@
  */
 package com.example.androiddevchallenge.ui.theme
 
+import androidx.compose.material.Colors
 import androidx.compose.ui.graphics.Color
 
-val purple200 = Color(0xFFBB86FC)
-val purple500 = Color(0xFF6200EE)
-val purple700 = Color(0xFF3700B3)
-val teal200 = Color(0xFF03DAC5)
+val primaryDarkTheme = Color(0xFFFFC947)
+val primaryLightTheme = Color(0XFFFF9800)
+val primaryVariant = Color(0XFFC66900)
+val secondary = Color(0xFF8D6E63)
+val textOnPrimary = Color(0xFF000000)
+val textOnSecondary = Color(0xFFFFFFFF)
+
+val Colors.cardBackground: Color
+    get() = if (isLight) Color(0xFFF6F6F6) else textOnPrimary
